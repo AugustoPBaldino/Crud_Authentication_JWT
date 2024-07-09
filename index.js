@@ -1,7 +1,9 @@
 const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
+const userRoutes = require('./Routes/userRoutes')
 
+const User = require('./Models/User')
 app.use(
     express.urlencoded({
         extended:  true,
@@ -9,11 +11,7 @@ app.use(
 )
 
 app.use(express.json())
-
-app.get('/users', (req, res) => {
-
-    res.json({message:'Oi Express!'})
-})
+app.use('/users',userRoutes)
 
 mongoose.connect('mongodb+srv://AugustoPBaldino:Pacoca0108@usercluster.l5jbaog.mongodb.net/bancodeusuarios?retryWrites=true&w=majority&appName=UserCluster')
 .then(() => {
