@@ -3,7 +3,7 @@ const app = express()
 const mongoose = require('mongoose')
 const userRoutes = require('./Routes/userRoutes')
 
-const User = require('./Models/User')
+
 app.use(
     express.urlencoded({
         extended:  true,
