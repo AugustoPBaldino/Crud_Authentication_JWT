@@ -2,10 +2,9 @@ const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
 const userRoutes = require('./Routes/userRoutes')
-require('dotenv').config()
 
 
-
+//a
 
 app.use(
     express.urlencoded({
