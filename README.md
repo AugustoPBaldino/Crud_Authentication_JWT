@@ -13,7 +13,6 @@
 ### [express](https://www.npmjs.com/package/express)
 - **Versão:** ^4.19.2
 - **Descrição:** Framework web para Node.js que facilita a criação de aplicações web e APIs.
-- **Documentação:** [express Documentation](https://expressjs.com/)
 
 ### [express-validator](https://www.npmjs.com/package/express-validator)
 - **Versão:** ^7.1.0
@@ -40,5 +39,5 @@
 Para instalar todas as dependências listadas acima, execute:
 
 ```sh
-npm install
+npm install bcrypt csv-writer express express-validator jsonwebtoken mongoose mongoose-sequence nodemon
 
