@@ -1,8 +1,11 @@
 const router = require('express').Router()
 const { body, validationResult } = require('express-validator');
 const User = require('../Models/User')
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
-router.post('/',
+const SECRET = 'your_secret_key';
+router.post('/users',
 [
         body('name').notEmpty().withMessage('O nome é obrigatório!'),
         body('email').isEmail().withMessage('Por favor, insira um e-mail válido!'),
@@ -22,17 +25,23 @@ router.post('/',
             if (userExists) {
                 return res.status(409).json({ error: 'E-mail já cadastrado!' });
             }
+            const salt = await bcrypt.genSalt(12)
+            const passwordHash = await bcrypt.hash(password,salt)
 
-            const user = new User({ name, email, password, level });
+            const user = new User({ name, email, password: passwordHash, level });
             await user.save();
             res.status(201).json({ message: 'Usuário cadastrado com sucesso!' });
         } catch (error) {
             res.status(500).json({ error: error.message });
         }
+
+        
+
+        
     }
 );
 
-router.get('/', async (req, res) => {
+router.get('/users', async (req, res) => {
 
     try{
         const users = await User.find()
@@ -43,7 +52,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id', async(req, res)=> {
+router.get('/users/:id', async(req, res)=> {
     const id = req.params.id
 
     try{
@@ -60,7 +69,7 @@ router.get('/:id', async(req, res)=> {
 });
 
 router.put(
-    '/:id',
+    '/users/:id',
     [
         body('name').optional().notEmpty().withMessage('O nome não pode estar vazio!'),
         body('email').optional().isEmail().withMessage('Por favor, insira um e-mail válido!'),
@@ -88,7 +97,7 @@ router.put(
     }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/users/:id', async (req, res) => {
     const id = req.params.id
   
     const user = await User.findOne({ id: id })
@@ -105,4 +114,39 @@ router.delete('/:id', async (req, res) => {
       res.status(500).json({ erro: error })
 }})
 
-  module.exports = router
+router.post('/login',
+    [
+        body('email').isEmail().withMessage('Por favor, insira um e-mail válido!'),
+        body('password').notEmpty().withMessage('A senha é obrigatória!')
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() });
+        }
+
+        const { email, password } = req.body;
+
+        try {
+            const user = await User.findOne({ email });
+            if (!user) {
+                return res.status(401).json({ message: 'usuario não encontrado!' });
+            }
+
+            // Para simplificação, estamos apenas comparando as senhas em texto puro.
+            // Em uma aplicação real, a senha deve ser criptografada e comparada usando bcrypt ou outra biblioteca.
+            if (user.password !== password) {
+                return res.status(401).json({ message: 'E-mail ou senha inválidos!' });
+            }
+
+            const token = jwt.sign({ id: user.id, email: user.email }, SECRET, { expiresIn: '1h' });
+
+            res.status(200).json({ token });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+);
+
+
+module.exports = router
