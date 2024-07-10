@@ -17,6 +17,7 @@ app.use(
 app.use(express.json())
 app.use(userRoutes)
 
+
 mongoose.connect('mongodb+srv://AugustoPBaldino:Senha123@usercluster.l5jbaog.mongodb.net/bancodeusuarios?retryWrites=true&w=majority&appName=UserCluster')
 .then(() => {
     console.log('conectando ao MongoDB')

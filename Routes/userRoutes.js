@@ -3,7 +3,8 @@ const { body, validationResult } = require('express-validator');
 const User = require('../Models/User')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-
+const { createObjectCsvWriter } = require('csv-writer');
+const { authenticateToken, authorizeLevel } = require('../middlewares/authMiddleware');
 const SECRET = 'your_secret_key';
 router.post('/users',
 [
@@ -147,6 +148,32 @@ router.post('/login',
         }
     }
 );
+
+router.get('/generate-csv', authenticateToken, authorizeLevel(4), async (req, res) => {
+    try {
+        const users = await User.find().lean();
+
+        const csvWriter = createObjectCsvWriter({
+            path: 'user_report.csv',
+            header: [
+                { id: 'id', title: 'ID' },
+                { id: 'name', title: 'Name' },
+                { id: 'email', title: 'Email' },
+                { id: 'level', title: 'Level' }
+            ]
+        });
+
+        await csvWriter.writeRecords(users);
+
+        res.download('user_report.csv', 'user_report.csv', (err) => {
+            if (err) {
+                res.status(500).json({ error: err.message });
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
 
 module.exports = router
