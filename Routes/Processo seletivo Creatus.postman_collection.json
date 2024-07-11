@@ -1,0 +1,130 @@
+{
+	"info": {
+		"_postman_id": "5e4afc87-bd87-46c8-8cbf-d71ed5b3470e",
+		"name": "Processo seletivo Creatus",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "33433274"
+	},
+	"item": [
+		{
+			"name": "Get All Users",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{URL}}/users"
+			},
+			"response": []
+		},
+		{
+			"name": "Create User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"usuarioHasheado\",\r\n    \"email\": \"jose.hasheado@edu.pucrs.br\",\r\n    \"password\": \"senha123\",\r\n    \"level\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{URL}}/users"
+			},
+			"response": []
+		},
+		{
+			"name": "Get User By Id",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Atualiza Usuario Por id",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": " {\r\n   \r\n        \"name\": \"Augusto1\",\r\n        \"email\": \"augusto1.baldino@edu.pucrs.br\",\r\n        \"password\": \"senha1\",\r\n        \"level\": 2\r\n \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{URL}}/users/1"
+			},
+			"response": []
+		},
+		{
+			"name": "Deleta usuario Por Id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": "{{URL}}/users/2"
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": "{{URL}}/users/login"
+			},
+			"response": []
+		},
+		{
+			"name": "Gerar CSV",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "URL",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	]
+}
