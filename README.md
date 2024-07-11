@@ -1,5 +1,9 @@
 # Projeto Node.js com Express e MongoDB
 
+## Arquitetura utilizada: RESTful
+
+A arquitetura RESTful (Representational State Transfer) é um estilo de arquitetura de software que utiliza princípios da web para criar serviços web escaláveis, eficientes e interoperáveis. Baseada em uma série de restrições, RESTful promove a comunicação entre sistemas distribuídos de maneira padronizada e simplificada, onde cada recurso é identificado por um URI (Uniform Resource Identifier) e manipulado através de suas representações em formatos como JSON ou XML. Utiliza métodos HTTP convencionais, como GET, POST, PUT e DELETE, e adota uma abordagem stateless, onde cada requisição contém todas as informações necessárias para seu processamento, sem dependências de estado entre as requisições. A arquitetura RESTful oferece vantagens significativas, como escalabilidade, simplicidade, interoperabilidade e flexibilidade, tornando-se uma escolha popular para o desenvolvimento de APIs e serviços web modernos.
+
 ## Acesso para a documentação
 
 ### [Swagger](http://localhost:3000/api-docs/#/)
