@@ -1,5 +1,11 @@
 # Projeto Node.js com Express e MongoDB
 
+## Acesso para a documentação
+
+### [Swagger](http://localhost:3000/api-docs/#/)
+
+Obs: Biblioteca Postman na pasta Routes!
+
 ## Dependências
 
 ### [bcrypt](https://www.npmjs.com/package/bcrypt)
