@@ -1,5 +1,9 @@
 # Projeto Node.js com Express e MongoDB
 
+## Acesso para a documenta
+
+### [Swagger](http://localhost:3000/api-docs/#/)
+
 ## Dependências
 
 ### [bcrypt](https://www.npmjs.com/package/bcrypt)
