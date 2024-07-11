@@ -6,6 +6,97 @@ const jwt = require('jsonwebtoken')
 const { createObjectCsvWriter } = require('csv-writer');
 const { authenticateToken, authorizeLevel } = require('../middlewares/authMiddleware');
 const SECRET = 'your_secret_key';
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - name
+ *         - email
+ *         - password
+ *         - level
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: O ID gerado automaticamente do usuário
+ *         name:
+ *           type: string
+ *           description: O nome do usuário
+ *         email:
+ *           type: string
+ *           description: O e-mail do usuário
+ *         password:
+ *           type: string
+ *           description: A senha do usuário
+ *         level:
+ *           type: integer
+ *           description: Nível de acesso do usuário
+ *       example:
+ *         id: 1
+ *         name: João Silva
+ *         email: joaosilva@example.com
+ *         password: senhaSegura
+ */
+
+/**
+ * @swagger
+ * tags:
+ *   name: Usuários
+ *   description: API de gerenciamento de usuários
+ */
+
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     summary: Retorna a lista de todos os usuários
+ *     tags: [Usuários]
+ *     responses:
+ *       200:
+ *         description: A lista de usuários
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ */
+router.get('/users', async (req, res) => {
+
+    try{
+        const users = await User.find()
+
+        res.status(200).json(users)
+    }catch(error){
+        res.status(500).json({ error: error.message });
+    }
+});
+
+/**
+ * @swagger
+ * /users:
+ *   post:
+ *     summary: Cria um novo usuário
+ *     tags: [Usuários]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       200:
+ *         description: O usuário criado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Algum erro no servidor
+ */
 router.post('/users',
 [
         body('name').notEmpty().withMessage('O nome é obrigatório!'),
@@ -35,24 +126,32 @@ router.post('/users',
         } catch (error) {
             res.status(500).json({ error: error.message });
         }
-
-        
-
-        
     }
 );
 
-router.get('/users', async (req, res) => {
-
-    try{
-        const users = await User.find()
-
-        res.status(200).json(users)
-    }catch(error){
-        res.status(500).json({ error: error.message });
-    }
-});
-
+/**
+ * @swagger
+ * /users/{id}:
+ *   get:
+ *     summary: Obtém o usuário pelo ID
+ *     tags: [Usuários]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: O ID do usuário
+ *     responses:
+ *       200:
+ *         description: A descrição do usuário pelo ID
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       404:
+ *         description: Usuário não encontrado
+ */
 router.get('/users/:id', async(req, res)=> {
     const id = req.params.id
 
@@ -68,7 +167,37 @@ router.get('/users/:id', async(req, res)=> {
         res.status(500).json({ error: error.message });
     }
 });
-
+/**
+ * @swagger
+ * /users/{id}:
+ *   put:
+ *     summary: Atualiza o usuário pelo ID
+ *     tags: [Usuários]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: O ID do usuário
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       200:
+ *         description: O usuário foi atualizado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       404:
+ *         description: Usuário não encontrado
+ *       500:
+ *         description: Algum erro aconteceu
+ */
 router.put(
     '/users/:id',
     [
@@ -97,7 +226,25 @@ router.put(
         res.status(500).json({error:error})
     }
 });
-
+/**
+ * @swagger
+ * /users/{id}:
+ *   delete:
+ *     summary: Remove o usuário pelo ID
+ *     tags: [Usuários]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: O ID do usuário
+ *     responses:
+ *       200:
+ *         description: O usuário foi deletado
+ *       404:
+ *         description: Usuário não encontrado
+ */
 router.delete('/users/:id', async (req, res) => {
     const id = req.params.id
   
@@ -114,7 +261,43 @@ router.delete('/users/:id', async (req, res) => {
     } catch (error) {
       res.status(500).json({ erro: error })
 }})
-
+/**
+ * @swagger
+ * /users/login:
+ *   post:
+ *     summary: Realiza o login de um usuário
+ *     tags: [Usuários]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: O e-mail do usuário
+ *               password:
+ *                 type: string
+ *                 description: A senha do usuário
+ *     responses:
+ *       200:
+ *         description: O usuário foi logado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *       401:
+ *         description: E-mail ou senha inválidos
+ *       422:
+ *         description: Erro de validação
+ */
 router.post('/login',
     [
         body('email').isEmail().withMessage('Por favor, insira um e-mail válido!'),
@@ -134,8 +317,6 @@ router.post('/login',
                 return res.status(401).json({ message: 'usuario não encontrado!' });
             }
 
-            // Para simplificação, estamos apenas comparando as senhas em texto puro.
-            // Em uma aplicação real, a senha deve ser criptografada e comparada usando bcrypt ou outra biblioteca.
             if (user.password !== password) {
                 return res.status(401).json({ message: 'E-mail ou senha inválidos!' });
             }
@@ -148,7 +329,20 @@ router.post('/login',
         }
     }
 );
-
+/**
+ * @swagger
+ * /users/generate-csv:
+ *   get:
+ *     summary: Gera um relatório CSV de usuários
+ *     tags: [Usuários]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Arquivo CSV gerado
+ *       500:
+ *         description: Algum erro aconteceu
+ */
 router.get('/generate-csv', authenticateToken, authorizeLevel(4), async (req, res) => {
     try {
         const users = await User.find().lean();
